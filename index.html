@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Employee Timesheet</title>
+    <!--Linking Bootstrap-->
+    <link rel="canonical" href="https://getbootstrap.com/docs/4.3/examples/sticky-footer-navbar/">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+    <!-- Linking CSS -->
+    <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+
+<body>
+    <header>
+        <div id="main" class="container">
+            <h1>Employee Data Management</h1>
+            <h3>A Comprehensive Directory of Employee Billable Hours</h3>
+        </div>
+    </header>
+    <div class="container">
+        <h5>Current Employees</h5>
+    </div>
+    <div class="container">
+        <table id="infoTable">
+            <tr>
+                <th>Train</th>
+                <th>Destination</th>
+                <th>Frequency (min)</th>
+                <th>Next Arrival</th>
+                <th>Minutes Away</th>
+            </tr>
+        </table>
+    </div>
+    <div class="container">
+        <h5>Add Employee</h5>
+        <form action="/action_page.php">
+            Employee Name<br>
+            <input id="name" type="text" name="employeename">
+            <br>
+            Role:<br>
+            <input id="role" type="text" name="role">
+            <br>
+            Start Date:<br>
+            <input id="startdate" type="text" name="startdate">
+            <br>
+            Monthly Rate:<br>
+            <input id="monthlyrate" type="text" name="monthlyrate">
+            <br><br>
+            <input id="submitButton" type="submit" value="Submit">
+        </form>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.4.1.js"
+        integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU=" crossorigin="anonymous"></script>
+    <!--  -->
+    <script src="https://www.gstatic.com/firebasejs/6.0.4/firebase-app.js"></script>
+    <!-- -->
+    <script src="https://www.gstatic.com/firebasejs/6.0.4/firebase-database.js"></script>
+    <!-- -->
+    <script src="https://cdn.jsdelivr.net/momentjs/2.12.0/moment.min.js"></script>
+
+    <!-- The core Firebase JS SDK is always required and must be listed first -->
+
+
+    <!-- TODO: Add SDKs for Firebase products that you want to use
+     https://firebase.google.com/docs/web/setup#config-web-app -->
+
+    <script>
+        // Your web app's Firebase configuration
+        var firebaseConfig = {
+            apiKey: "AIzaSyA4Pry9aQ9h26hE76tjYcDu1uRBkZtg2CQ",
+            authDomain: "userdatabaseinclass.firebaseapp.com",
+            databaseURL: "https://userdatabaseinclass.firebaseio.com",
+            projectId: "userdatabaseinclass",
+            storageBucket: "",
+            messagingSenderId: "142333756264",
+            appId: "1:142333756264:web:407621c057144a81"
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        var userDatabase = firebase.database();
+
+
+        $("#submitButton").on("click", function () {
+            event.preventDefault();
+
+            // YOUR TASK!!!
+            var employeeName = $("#name").val().trim();
+            var role = $("#role").val().trim();
+            var startDate = moment($("#startdate").val().trim(),"MM/DD/YYYY").format("MM/DD/YYYY");
+            var payRate = $("#monthlyrate").val().trim();
+console.log(startDate);
+            $("#name").val("");
+            $("#role").val("");
+            $("#startdate").val("");
+            $("#monthlyrate").val("");
+
+            userDatabase.ref().push({
+                "name": employeeName,
+                "role": role,
+                "startDate": startDate,
+                "payRate": payRate,
+                dateAdded: firebase.database.ServerValue.TIMESTAMP
+            });
+            console.log(userDatabase);
+        });
+
+        userDatabase.ref().on("child_added", function (childSnapshot) {
+
+            // full list of items to the well
+
+            var newEntry = $("<tr>");
+            var monthsWorked = moment().diff(childSnapshot.val().startDate, "months");
+            var totalPay = monthsWorked * Number(childSnapshot.val().payRate);
+            
+            console.log(monthsWorked);
+            newEntry.append("<td>" + childSnapshot.val().name + "</td>", "<td>" + childSnapshot.val().role + "</td>", "<td>" + childSnapshot.val().startDate + "</td>", "<td>" + monthsWorked + "</td>", "<td>" + childSnapshot.val().payRate + "</td>", "<td>" + totalPay + "</td>");
+            $("#infoTable").append(newEntry);
+
+            // Handle the errors
+        }, function (errorObject) {
+            console.log("Errors handled: " + errorObject.code);
+        });
+
+
+
+
+    </script>
+
+
+
+</body>
