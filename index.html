@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Employee Timesheet</title>
+    <title>Train Schedule</title>
     <!--Linking Bootstrap-->
     <link rel="canonical" href="https://getbootstrap.com/docs/4.3/examples/sticky-footer-navbar/">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
@@ -14,6 +14,7 @@
 </head>
 
 <body>
+    <!--header with jumbotron. using bootstrap to be mibile friendly-->
     <header>
         <div id="headerDiv" class="container jumbotron">
             <h1>Train Schedule</h1>
@@ -23,6 +24,7 @@
         <h5>Schedule</h5>
     </div>
     <div class="container">
+        <!--beginning table to use as a destination for all of the entries-->
         <table id="infoTable">
             <tr>
                 <th>Train</th>
@@ -36,6 +38,7 @@
     <div class="container">
         <h5>Add Train</h5>
         <form>
+            <!--form to input all of the train information. using a selector to prevent the user from messsing up the input of the time-->
             Train:<br>
             <input id="train" type="text" name="Train Name">
             <br>
@@ -43,6 +46,7 @@
             <input id="destination" type="text" name="Destination">
             <br>
             <div id="startTime">
+                <!--military or UTC time. this is -5h offset from local time but all this will be calculated with the moment js stuff-->
                 Time (UTC-Military):
                 <br>
                 <span>
@@ -138,10 +142,11 @@
                     </select>
                 </span>
             </div>
-            Frequency:<br>
+            Frequency (In minutes - Must be numeric):<br>
             <input id="frequency" type="text" name="Frequency">
             <br><br>
             <input id="submitButton" type="submit" value="Submit">
+            <!--error span to display any user input errors-->
             <span id="errorSpan"></span>
         </form>
     </div>
